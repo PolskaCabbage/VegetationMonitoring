@@ -45,14 +45,14 @@ namespace VegetationMonitoring.Controllers
 
         private void SetViewDataStatement()
         {
-            var names = new List<string> { "stapler", "onion peeler", "garlic press", "rolling pin", "walnut opener" };
+            var names = new List<string> { "stapler", "onion peeler", "garlic press", "tennis racket", "bowling ball", "rolling pin", "walnut opener" };
 
             Random rand = new Random();
             int index = rand.Next(names.Count);
             var name = names[index];
             names.RemoveAt(index);
 
-            ViewData["TypeOfThing"] = name;
+            ViewData["TypeOfThing"] = name + ".";
         }
 
     }

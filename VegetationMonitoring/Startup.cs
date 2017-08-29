@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using VegetationMonitoring.Services;
 
 namespace VegetationMonitoring
 {
     public class Startup
     {
+        private IHostingEnvironment _env;
+
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
+
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
@@ -27,6 +32,16 @@ namespace VegetationMonitoring
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add our custom email service
+            if (_env.IsDevelopment())
+            {
+                services.AddScoped<IMailService, DebugMailService>();
+            }
+            else
+            {
+                //TODO: Implement a real mail service for production
+            }
+
             // Add framework services.
             services.AddMvc();
         }

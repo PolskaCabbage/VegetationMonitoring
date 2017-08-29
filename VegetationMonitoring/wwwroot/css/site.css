@@ -40,3 +40,10 @@ textarea {
 a{
     color: #080 !important;
 }
+
+.NotifyRequired {
+    color: #f00;
+    font-style: italic;
+    font-weight: bold;
+    padding-left: 8px;
+}

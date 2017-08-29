@@ -1,8 +1,15 @@
-﻿@{
+﻿@model VegetationMonitoring.ViewModels.ContactViewModel
+
+@{
     ViewData["Title"] = "Contact";
 }
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+}
 
 <div style="    
     height: 0px;
@@ -26,3 +33,21 @@
     <strong>email:</strong> <a href="mailto:support@cloca.com">support@cloca.com</a><br />
 </address>
 
+<form method="post">
+    <span asp-validation-summary="ModelOnly" class="NotifyRequired"></span><br />
+
+    <label asp-for="Name">Name</label><br />
+    <input asp-for="Name"/>
+    <span asp-validation-for="Name" class="NotifyRequired"></span>
+    <br />
+
+    <label asp-for="Email">Email</label><br />
+    <input asp-for="Email" type="email" />
+    <span asp-validation-for="Email" class="NotifyRequired"></span>
+    <br />
+
+    <label asp-for="Body">Message</label><br />
+    <textarea asp-for="Body" cols="40" rows="4"></textarea><span asp-validation-for="Body" class="NotifyRequired"></span><br />
+    <div><input type="submit" value="Send Message" /></div>
+    
+</form>

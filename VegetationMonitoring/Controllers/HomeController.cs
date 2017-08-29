@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using VegetationMonitoring.ViewModels;
 using VegetationMonitoring.Services;
+using Microsoft.Extensions.Configuration;
 
 namespace VegetationMonitoring.Controllers
 {
@@ -13,9 +14,12 @@ namespace VegetationMonitoring.Controllers
         // Generate Mail Service thingamajiggy:
 
         private IMailService _mailService;
-        public HomeController(IMailService mailService)
+        private IConfigurationRoot _config;
+
+        public HomeController(IMailService mailService, IConfigurationRoot config)
         {
             _mailService = mailService;
+            _config = config;
         }
 
 
@@ -51,18 +55,38 @@ namespace VegetationMonitoring.Controllers
 
         public IActionResult Contact()
         {
+            ViewData["Email"] = _config["MailSettings:ToAddress"];
+            ViewData["MailToEmail"] = string.Format(MailtoLink, _config["MailSettings:ToAddress"], EmailSubject);
+
             ViewData["Message"] = "Contact Application Development:";
             SetViewDataStatement();
 
             return View();
         }
 
+        string EmailSubject = "Email from Vegetation Monitoring Application";
+        string MailtoLink = @"<a href=""mailto:{0}?Subject={1}"">{0}</a>";
+
         [HttpPost]
         public IActionResult Contact(ContactViewModel model)
         {
+            ViewData["Email"] = _config["MailSettings:ToAddress"];
+            ViewData["MailToEmail"] = string.Format(MailtoLink,_config["MailSettings:ToAddress"], EmailSubject);
 
-            _mailService.SendMail("support@cloca.com", model.Email, $"Email from Vegetation Monitoring Application - {model.Name}", model.Body);
+            if (model.Email.ToUpper().Contains("AOL.COM"))
+            {
+                ModelState.AddModelError("Email", "We don't support AOL addresses");
+            }
 
+            if (ModelState.IsValid)
+            {
+                _mailService.SendMail(_config["MailSettings:ToAddress"], model.Email, $"{EmailSubject} - {model.Name}", model.Body);
+                ViewBag.UserMessage = "Message Sent.";
+                ModelState.Clear();
+            }
+
+            ViewData["Message"] = "Contact Application Development:";
+            SetViewDataStatement();
 
             return View();
         }

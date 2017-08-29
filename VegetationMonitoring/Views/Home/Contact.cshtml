@@ -9,6 +9,16 @@
 @section scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("form").submit(function () {
+                if (!$(this).valid()) {
+                    $('.NotifyOK').hide();
+                }
+            });
+        }); 
+    </script>
 }
 
 <div style="    
@@ -30,24 +40,31 @@
 </address>
 
 <address>
-    <strong>email:</strong> <a href="mailto:support@cloca.com">support@cloca.com</a><br />
+    <strong>email:</strong> 
+    @Html.Raw(@ViewData["MailToEmail"])
 </address>
 
 <form method="post">
     <span asp-validation-summary="ModelOnly" class="NotifyRequired"></span><br />
 
     <label asp-for="Name">Name</label><br />
-    <input asp-for="Name"/>
+    <input class="inputWide" asp-for="Name"/>
     <span asp-validation-for="Name" class="NotifyRequired"></span>
     <br />
 
     <label asp-for="Email">Email</label><br />
-    <input asp-for="Email" type="email" />
+    <input class="inputWide" asp-for="Email" type="email" />
     <span asp-validation-for="Email" class="NotifyRequired"></span>
     <br />
 
     <label asp-for="Body">Message</label><br />
-    <textarea asp-for="Body" cols="40" rows="4"></textarea><span asp-validation-for="Body" class="NotifyRequired"></span><br />
-    <div><input type="submit" value="Send Message" /></div>
+    <textarea class="inputWide" asp-for="Body" cols="40" rows="4"></textarea><span asp-validation-for="Body" class="NotifyRequired"></span>
+    @if (ViewBag.UserMessage != null)
+    {
+        <span class="NotifyOK">@ViewBag.UserMessage</span>
+    } 
     
+    <br />
+    <div style="margin-top:32px;"><input type="submit" value="Send Message" /></div>
+
 </form>

@@ -32,6 +32,8 @@ namespace VegetationMonitoring
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton(Configuration); 
+
             // Add our custom email service
             if (_env.IsDevelopment())
             {
